@@ -11,7 +11,6 @@ let mouse = {
     radius: 150
 }
 
-
 let adjustX = 6;
 let adjustY = 0;
 
@@ -38,6 +37,8 @@ class Particle{
 	this.baseX = this.x;
 	this.baseY = this.y;
 	this.density = (Math.random() * 40) + 5;
+
+    this.weight = 2;
 	}
 	draw(){
 		ctx.fillStyle = "white";
@@ -47,6 +48,9 @@ class Particle{
 		ctx.fill();
 	}
 	update(){
+        this.weight += 0.01;
+        this.y =+ this.weight;
+
 		let dx = mouse.x - this.x;
 		let dy = mouse.y - this.y;
 		let distance = Math.sqrt(dx * dx + dy * dy);
@@ -76,19 +80,31 @@ class Particle{
 
 function init(){
 	particleArray= [];
-	for(let y = 0; y < textCoordinates.height; y++){
+	for(let i = 0; i < 10; i++){
 		for(let x = 0; x < textCoordinates.width; x++){
-			if(textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128){
-				let positionX = x + adjustX;
-				let positionY = y + adjustY;
-				particleArray.push(new Particle(positionX * 25, positionY * 25));
-			}
+			let x = Math.random() * canvas.width;
+            let y = Math.random() * canvas.height;
+            particleArray.push(new Particle(x, y))
 		}
 		
 	}
 }
+// DRAW LETTERS
+// function init(){
+// 	particleArray= [];
+// 	for(let y = 0; y < textCoordinates.height; y++){
+// 		for(let x = 0; x < textCoordinates.width; x++){
+// 			if(textCoordinates.data[(y * 4 * textCoordinates.width) + (x * 4) + 3] > 128){
+// 				let positionX = x + adjustX;
+// 				let positionY = y + adjustY;
+// 				particleArray.push(new Particle(positionX * 25, positionY * 25));
+// 			}
+// 		}
+		
+// 	}
+// }
+
 init();
-//console.log(particleArray);
 
 function animate(){
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -110,8 +126,8 @@ function connect(){
 			let dy = particleArray[a].y - particleArray[b].y;
 			let distance = Math.sqrt(dx * dx + dy * dy);
 			
-			if(distance < 80){
-				opacityValue = 1 - (distance/80);
+			if(distance < 40){
+				opacityValue = 1 - (distance/40);
 				ctx.strokeStyle = "rgba(255,255,255," + opacityValue + ")";
 				ctx.lineWidth = 2;
 				ctx.beginPath();
